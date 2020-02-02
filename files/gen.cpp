@@ -8,8 +8,8 @@ using namespace std;
 #include <algorithm>
 #include <random>
 
+std::default_random_engine generator;
 void gen(int n, int m, int k) {
-    std::default_random_engine generator;
     std::normal_distribution<double> distribution(k, rand() % 10);
     cout << n << " " << m << endl;
     for (int j = 0; j < m; j++) {
@@ -29,6 +29,7 @@ void gen(int n, int m, int k) {
 }
 
 int main(int argc, char *argv[]) {
+    generator.seed(57);
     int test_group = stoi(argv[1]);
     if (test_group == 1) {
         cout << 6 << endl;
