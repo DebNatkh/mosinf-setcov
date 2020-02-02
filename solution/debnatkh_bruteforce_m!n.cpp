@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-// #define int long long
+
 #define x first
 #define y second
 #define hashset unordered_set
@@ -33,58 +33,59 @@ inline int binPow(int x, int deg, int mod) {
 
 // =======================
 
+#define MAXN 101
+#define MAXM 20
+
+bitset<MAXN> masks[MAXM];
+int k[MAXM];
 
 void solve() {
     int n, m;
     cin >> n >> m;
-    vector<vector<int>> usage(m);
+
     for (int i = 0; i < m; i++) {
-        int k; cin >> k;
-        usage[i] = readvector<int>(k);
+        cin >> k[i];
+        masks[i].reset();
+        for (int j = 0; j < k[i]; j++) {
+            int x;
+            cin >> x;
+            masks[i][--x] = 1;
+        }
     }
     vector<int>order(m);
     for (int i = 0; i < m; i++) order[i] = i;
     int ans = 0;
-    vector <int> ans_order;
-    do {
-        vector<bool> used(n + 1, false);
-        for (auto i : order) {
-            bool flag = true;
-            for (auto j : usage[i]) {
-                if (used[j]) {
-                    flag = false;
-                    break;
-                }
-            }
-            if (!flag) break;
-            for (auto j : usage[i]) 
-                used[j] = 1;
-        }
-        ans = max(ans, accumulate(used.begin(), used.end(), 1));
-        if (ans == accumulate(used.begin(), used.end(), 1)) {
-            ans_order = order;
-        }
-    } while (next_permutation(order.begin(), order.end()));
+    int ans_mask = 0;
 
-    int cnt = 0;
-    vector<bool> used(n + 1, false);
-    vector<int> answer;
-    for (auto i : ans_order) {
-        bool flag = true;
-        for (auto j : usage[i]) {
-            if (used[j]) {
-                flag = false;
-                break;
+
+    for (int mask = 0; mask < (1 << m); mask++) {
+        bitset<MAXN> cur;
+        cur.reset();
+
+        int cnt = 0;
+        for (int i = 0; i < m; i++) {
+            if (getbit(mask, i)) {
+                cnt += k[i];
+                cur |= masks[i];
             }
         }
-        if (!flag) break;
-        for (auto j : usage[i]) 
-            used[j] = 1;
-        cnt++;
-        answer.push_back(i);
+
+        if (cnt == cur.count()) {
+            if (ans < cnt) {
+                ans = cnt;
+                ans_mask = mask;
+            }
+        }
     }
-    cout << cnt << endl;
-    for (auto e : answer) cout << ++e << " "; cout << endl;
+
+
+    cout << __builtin_popcount(ans_mask) << endl;
+    for (int i = 0; i < m; i++) {
+        if (getbit(ans_mask, i)) {
+            cout << i + 1 << " ";
+        }
+    }
+    cout << endl;
 
 }
 
