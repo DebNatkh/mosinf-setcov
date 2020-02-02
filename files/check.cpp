@@ -22,4 +22,5 @@ int main(int argc, char **argv)
   quitp(score, "participant's solution is ok");
 
   return 0;
+  return 0;
 } 
